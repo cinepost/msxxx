@@ -67,6 +67,7 @@ GitHub.sublime-settings
 
 # Trash
 core
+*.lck
 
 # Folders
 env
@@ -94,3 +95,7 @@ backup/
 # static libs
 .a
 .lib
+
+# kicad
+*-backups
+*-backups/
