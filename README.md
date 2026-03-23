@@ -28,13 +28,12 @@ This implementation moves beyond standard FPGA PWM audio, featuring a dedicated 
 
 ## 🚀 Getting Started
 1. **Flash the MCU**: Load the RP2040 firmware to manage the FPGA bridge.
-2. **FPGA Bitstream**: Place the compiled `.rbf` or `.bin` file on the designated storage (SD card/Internal Flash).
+2. **FPGA Bitstream**: Place the compiled `.rbf` files on the designated storage (Internal Flash).
 3. **Power On**: The Pico will configure the Cyclone I and initialize the MSX environment.
 
 ## 🔧 Future Improvements
-- [ ] Expanded memory mapper support.
 - [ ] Additional sound chip synthesis (SCC+, OPLL).
 - [ ] Enhanced firmware interface for the RP2040 OSD.
 
 ## 📄 License
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the [WTFPL License](LICENSE).

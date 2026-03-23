@@ -1,7 +1,12 @@
+#include <stdio.h>
 #include "pico/stdlib.h"
+#include "pico/multicore.h"
+#include "pico/bit_ops.h"
+#include "hardware/sync.h"
 #include "hardware/spi.h"
-#include "fs.h"          // LittleFS
-#include "ssd1306.h"     // OLED
+
+#include "storage.h"
+
 
 // Pin Definitions
 #define PIN_NCONFIG   16  // Output to FPGA
@@ -17,8 +22,9 @@
 #define PIN_BTN_3     12  // OSD Button 3
 #define PIN_BTN_4     13  // OSD Button 4
 
-#define I2C_SDA       4
-#define I2C_SCL       5
+#define I2C_SDA_PIN       4
+#define I2C_SCL_PIN       5
+#include "ssd1306/ssd1306_i2c.h"     // OLED
 
 #define ENCODER_A     2
 #define ENCODER_B     3
@@ -26,6 +32,13 @@
 
 #define MAX_FILES 16
 #define MAX_FILENAME_LEN 32
+
+// Mutlicore
+// Shared data structure
+struct {
+    uint32_t    some_value;
+    mutex_t     data_mutex;
+} shared_state;
 
 // --- State Management ---
 // Define GPIOs for the 4 buttons
@@ -114,13 +127,19 @@ bool reset_fpga_sequence() {
     return true; // FPGA is ready for bitstream data
 }
 
+static inline uint8_t reverse_uint8(uint8_t b) {
+    // __rev reverses 32 bits. If input is 0x01 (00...0001), 
+    // it becomes 0x80000000. Shift right by 24 to get 0x80.
+    return (uint8_t)(__rev(b) >> 24);
+}
+
 bool load_selected_fpga_core(const char* filename) {
     lfs_file_t f;
     lfs_file_open(&lfs, &f, filename, LFS_O_RDONLY);
     
     // 1. Reset FPGA (Same as previous SPI logic)
     if(!reset_fpga_sequence()) {
-        oled_print("FPGA INIT ERROR!");
+        drawString(0, 0, "FPGA INIT ERROR!");
         return false;
     }
 
@@ -129,8 +148,9 @@ bool load_selected_fpga_core(const char* filename) {
     int read_bytes;
     while ((read_bytes = lfs_file_read(&lfs, &f, buffer, 256)) > 0) {
         // Bit-reverse here if files aren't pre-processed
-        for(int i=0; i<read_bytes; i++) buffer[i] = __RBIT(buffer[i]) >> 24;
-        
+        for(int i=0; i<read_bytes; i++) {
+            buffer[i] = reverse_uint8(buffer[i]) >> 24;
+        }
         spi_write_blocking(spi0, buffer, read_bytes);
     }
     
@@ -138,7 +158,7 @@ bool load_selected_fpga_core(const char* filename) {
     
     // 3. Check Success
     if (gpio_get(PIN_CONF_DONE)) {
-        oled_print("SUCCESS!");
+        drawString(0, 0, "SUCCESS!");
     }
     return true;
 }
@@ -164,11 +184,12 @@ void init_hardware() {
     gpio_set_function(PIN_DATA0, GPIO_FUNC_SPI);
 
     // 4. Initialize I2C (for SSD1306 OLED)
-    i2c_init(i2c0, 400 * 1000); // 400kHz Fast Mode
-    gpio_set_function(I2C_SDA, GPIO_FUNC_I2C);
-    gpio_set_function(I2C_SCL, GPIO_FUNC_I2C);
-    gpio_pull_up(I2C_SDA);
-    gpio_pull_up(I2C_SCL);
+    i2c_init(I2C_PORT, I2C_CLOCK * 1000);
+    gpio_set_function(I2C_SDA_PIN, GPIO_FUNC_I2C);
+    gpio_set_function(I2C_SCL_PIN, GPIO_FUNC_I2C);
+    gpio_pull_up(I2C_SDA_PIN);
+    gpio_pull_up(I2C_SCL_PIN);
+    initSSD1306();
 
     // 5. Initialize Rotary Encoder Pins
     gpio_init(ENCODER_A);
@@ -184,6 +205,32 @@ void init_hardware() {
     gpio_pull_up(ENCODER_BTN);
 }
 
+static inline int read_buttons_state() {
+    return 0;
+}
+
+static inline bool button_pressed() {
+    return true;
+}
+
+// --- CORE 1: UI PROCESS ---
+void core1_entry() {
+    // Initialize UI/Display here (e.g., LVGL init)
+    
+    while (1) {
+        uint32_t current_val;
+        
+        // Safely read shared data from Core 0
+        mutex_enter_blocking(&shared_state.data_mutex);
+        current_val = shared_state.some_value;
+        mutex_exit(&shared_state.data_mutex);
+
+        // Update UI elements with current_val
+        // lv_timer_handler(); // Example for LVGL
+        sleep_ms(16); // ~60fps target
+    }
+}
+
 int main() {
     // Init I2C for OLED, SPI for FPGA, and LittleFS
     init_hardware();
@@ -191,21 +238,27 @@ int main() {
     populate_file_list();
     init_buttons();
 
+    mutex_init(&shared_state.data_mutex);
+
+    // Launch UI on Core 1
+    multicore_reset_core1();    
+    multicore_launch_core1(core1_entry);
+
     while (true) {    
         // Display Menu
-        oled_clear();
-        oled_draw_text(0, 0, "Select Core:");
-        oled_draw_text(0, 20, file_list[selected_index]);
-        oled_display();
+        clearDisplay();
+        drawString(0, 0, "Select Core:");
+        drawString(0, 20, file_list[selected_index]);
+        updateDisplay();
 
         pico_buttons_state = read_buttons_state();
         printf("Buttons state: 0x%01X\n", pico_buttons_state);
 
         // If Button Pressed
         if (button_pressed()) {
-            oled_clear();
-            oled_draw_text(0, 10, "Loading...");
-            oled_display();
+            clearDisplay();
+            drawString(0, 10, "Loading...");
+            updateDisplay();
             if(load_selected_fpga_core(file_list[selected_index])) {
                 // After config, switch pins 2 & 3 to SPI mode
                 spi_init(spi0, 1000000);
@@ -228,6 +281,14 @@ int main() {
 
             break;
         }
+
+        // Perform logic: read sensors, calculate state, etc.
+        uint32_t some_reading = (uint32_t)(get_absolute_time() / 1000);
+
+        // Safely update shared data for the UI
+        mutex_enter_blocking(&shared_state.data_mutex);
+        shared_state.some_value = some_reading;
+        mutex_exit(&shared_state.data_mutex);
 
         sleep_ms(100);
     }

@@ -1,4 +1,7 @@
-#include "lfs.h"
+#ifndef _MSXXX_PICO_STORAGE_H
+#define _MSXXX_PICO_STORAGE_H
+
+#include "littlefs/lfs.h"
 #include "pico/stdlib.h"
 #include "hardware/flash.h"
 
@@ -55,8 +58,9 @@ void mount_littlefs() {
     // 2. If it fails (first time use), format and then mount
     if (err) {
         printf("Formatting Flash...\n");
-        oled_draw_text(0, 0, "Formatting Flash...");
         lfs_format(&lfs, &cfg);
         lfs_mount(&lfs, &cfg);
     }
 }
+
+#endif  // _MSXXX_PICO_STORAGE_H
