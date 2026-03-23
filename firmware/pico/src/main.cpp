@@ -9,7 +9,13 @@
 #define PIN_DCLK      18  // SPI0 SCK Clock (Set to 0 during reset)
 #define PIN_CONF_DONE 20  // Input from FPGA
 #define PIN_DATA0     19  // SPI0 TX
+#define PIN_CS        21  //
 #define SPI_PORT      spi0
+
+#define PIN_BTN_1     10  // OSD Button 1
+#define PIN_BTN_2     11  // OSD Button 2
+#define PIN_BTN_3     12  // OSD Button 3
+#define PIN_BTN_4     13  // OSD Button 4
 
 #define I2C_SDA       4
 #define I2C_SCL       5
@@ -22,9 +28,36 @@
 #define MAX_FILENAME_LEN 32
 
 // --- State Management ---
+// Define GPIOs for the 4 buttons
+const uint BUTTON_PINS[] = {PIN_BTN_1, PIN_BTN_2, PIN_BTN_3, PIN_BTN_4};
+uint8_t pico_buttons_state = 0;
+
+// Virtual dip switches
+uint8_t pico_dip_switches = 0b11001100;
+
+// Core .rbf files
 char file_list[MAX_FILES][MAX_FILENAME_LEN];  // Store filenames
 int selected_index = 0;
 int total_rbf_files = 0;
+
+void init_buttons() {
+    for (int i = 0; i < 4; i++) {
+        gpio_init(BUTTON_PINS[i]);
+        gpio_set_dir(BUTTON_PINS[i], GPIO_IN);
+        gpio_pull_up(BUTTON_PINS[i]); // Enable internal pull-up
+    }
+}
+
+uint8_t read_dip_state() {
+    uint8_t state = 0;
+    for (int i = 0; i < 4; i++) {
+        // Logical NOT (!) because pull-up means 0 = Pressed
+        if (!gpio_get(BUTTON_PINS[i])) {
+            state |= (1 << i);
+        }
+    }
+    return state; // Returns a value from 0-15
+}
 
 // Helper to check if string ends with a specific suffix
 bool has_extension(const char *name, const char *ext) {
@@ -156,27 +189,46 @@ int main() {
     init_hardware();
     mount_littlefs();
     populate_file_list();
+    init_buttons();
 
-    while (true) {
-        // Rotary Encoder logic to change selected_index
-        // ...
-        
+    while (true) {    
         // Display Menu
         oled_clear();
         oled_draw_text(0, 0, "Select Core:");
         oled_draw_text(0, 20, file_list[selected_index]);
         oled_display();
 
+        pico_buttons_state = read_buttons_state();
+        printf("Buttons state: 0x%01X\n", pico_buttons_state);
+
         // If Button Pressed
         if (button_pressed()) {
             oled_clear();
             oled_draw_text(0, 10, "Loading...");
             oled_display();
-            if(!load_selected_fpga_core(file_list[selected_index])) {
+            if(load_selected_fpga_core(file_list[selected_index])) {
+                // After config, switch pins 2 & 3 to SPI mode
+                spi_init(spi0, 1000000);
+                gpio_set_function(PIN_DCLK, GPIO_FUNC_SPI);
+                gpio_set_function(PIN_DATA0, GPIO_FUNC_SPI);
+                
+                uint8_t fpga_readback = 0;
+
+                while(true) {
+                    gpio_put(PIN_CS, 0);
+                    spi_write_read_blocking(spi0, &pico_dip_switches, &fpga_readback, 1);
+                    gpio_put(PIN_CS, 1);
+                    
+                    printf("FPGA sent back: 0x%02X\n", fpga_readback);
+                    sleep_ms(500);
+                }
+            } else {
                 // TODO: handle configuration error
             }
 
             break;
         }
+
+        sleep_ms(100);
     }
 }

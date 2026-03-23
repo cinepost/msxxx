@@ -1,10 +1,10 @@
 module virtual_dip_switch (
-    input wire clk,           // FPGA System Clock
-    input wire rst_n,         // Reset (Active Low)
-    input wire pico_sclk,     // Serial Clock from Pico
-    input wire pico_data,     // Serial Data from Pico
-    input wire pico_latch,    // Latch signal from Pico
-    output reg [7:0] sw_out   // 8-bit "Virtual Switch" output
+    input wire clk,            // FPGA System Clock
+    input wire rst_n,          // Reset (Active Low)
+    input wire pico_sclk,      // Serial Clock from Pico
+    input wire pico_data,      // Serial Data from Pico
+    input wire pico_latch,     // Latch signal from Pico
+    output reg  [7:0] sw_out   // 8-bit "Virtual Switch" output set by Pico
 );
 
     reg [7:0] shift_reg;

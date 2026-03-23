@@ -2272,7 +2272,7 @@
 			)
 		)
 		(property "Value" "CS4398"
-			(at 0 -20.32 0)
+			(at 0 -24.13 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2316,8 +2316,8 @@
 		)
 		(symbol "CS4398_1_1"
 			(rectangle
-				(start -7.62 0)
-				(end 7.62 -40.64)
+				(start -10.16 0)
+				(end 10.16 -40.64)
 				(stroke
 					(width 0)
 					(type solid)
@@ -2327,7 +2327,7 @@
 				)
 			)
 			(pin input line
-				(at -7.62 -3.81 180)
+				(at -12.7 -3.81 0)
 				(length 2.54)
 				(name "MCLK"
 					(effects
@@ -2345,7 +2345,7 @@
 				)
 			)
 			(pin input line
-				(at -7.62 -6.35 180)
+				(at -12.7 -6.35 0)
 				(length 2.54)
 				(name "SCLK"
 					(effects
@@ -2363,7 +2363,7 @@
 				)
 			)
 			(pin input line
-				(at -7.62 -8.89 180)
+				(at -12.7 -8.89 0)
 				(length 2.54)
 				(name "LRCK"
 					(effects
@@ -2381,7 +2381,7 @@
 				)
 			)
 			(pin input line
-				(at -7.62 -11.43 180)
+				(at -12.7 -11.43 0)
 				(length 2.54)
 				(name "SDIN"
 					(effects
@@ -2399,7 +2399,7 @@
 				)
 			)
 			(pin power_in line
-				(at -7.62 -13.97 180)
+				(at -12.7 -13.97 0)
 				(length 2.54)
 				(name "VLS"
 					(effects
@@ -2417,7 +2417,7 @@
 				)
 			)
 			(pin input clock
-				(at -7.62 -16.51 180)
+				(at -12.7 -16.51 0)
 				(length 2.54)
 				(name "DSD_SCLK"
 					(effects
@@ -2435,7 +2435,7 @@
 				)
 			)
 			(pin input line
-				(at -7.62 -19.05 180)
+				(at -12.7 -19.05 0)
 				(length 2.54)
 				(name "DSD_A"
 					(effects
@@ -2453,7 +2453,7 @@
 				)
 			)
 			(pin input line
-				(at -7.62 -21.59 180)
+				(at -12.7 -21.59 0)
 				(length 2.54)
 				(name "DSD_B"
 					(effects
@@ -2471,7 +2471,7 @@
 				)
 			)
 			(pin power_in line
-				(at -7.62 -24.13 180)
+				(at -12.7 -24.13 0)
 				(length 2.54)
 				(name "VLC"
 					(effects
@@ -2489,7 +2489,7 @@
 				)
 			)
 			(pin input line
-				(at -7.62 -26.67 180)
+				(at -12.7 -26.67 0)
 				(length 2.54)
 				(name "M0"
 					(effects
@@ -2507,7 +2507,7 @@
 				)
 			)
 			(pin input line
-				(at -7.62 -29.21 180)
+				(at -12.7 -29.21 0)
 				(length 2.54)
 				(name "M1"
 					(effects
@@ -2525,7 +2525,7 @@
 				)
 			)
 			(pin input line
-				(at -7.62 -31.75 180)
+				(at -12.7 -31.75 0)
 				(length 2.54)
 				(name "M2"
 					(effects
@@ -2543,7 +2543,7 @@
 				)
 			)
 			(pin input line
-				(at -7.62 -34.29 180)
+				(at -12.7 -34.29 0)
 				(length 2.54)
 				(name "M3"
 					(effects
@@ -2561,7 +2561,7 @@
 				)
 			)
 			(pin input line
-				(at -7.62 -36.83 180)
+				(at -12.7 -36.83 0)
 				(length 2.54)
 				(name "RST"
 					(effects
@@ -2579,7 +2579,7 @@
 				)
 			)
 			(pin power_in line
-				(at -3.81 0 90)
+				(at -3.81 2.54 270)
 				(length 2.54)
 				(name "VD"
 					(effects
@@ -2597,7 +2597,7 @@
 				)
 			)
 			(pin power_in line
-				(at -3.81 -40.64 270)
+				(at -3.81 -43.18 90)
 				(length 2.54)
 				(name "DGND"
 					(effects
@@ -2615,7 +2615,7 @@
 				)
 			)
 			(pin power_in line
-				(at 3.81 0 90)
+				(at 3.81 2.54 270)
 				(length 2.54)
 				(name "VA"
 					(effects
@@ -2633,7 +2633,7 @@
 				)
 			)
 			(pin power_in line
-				(at 3.81 -40.64 270)
+				(at 3.81 -43.18 90)
 				(length 2.54)
 				(name "AGND"
 					(effects
@@ -2651,7 +2651,7 @@
 				)
 			)
 			(pin output line
-				(at 7.62 -3.81 0)
+				(at 12.7 -3.81 180)
 				(length 2.54)
 				(name "AMUTEC"
 					(effects
@@ -2669,7 +2669,7 @@
 				)
 			)
 			(pin output line
-				(at 7.62 -6.35 0)
+				(at 12.7 -6.35 180)
 				(length 2.54)
 				(name "AOUTA-"
 					(effects
@@ -2687,7 +2687,7 @@
 				)
 			)
 			(pin output line
-				(at 7.62 -8.89 0)
+				(at 12.7 -8.89 180)
 				(length 2.54)
 				(name "AOUTA+"
 					(effects
@@ -2705,7 +2705,7 @@
 				)
 			)
 			(pin output line
-				(at 7.62 -13.97 0)
+				(at 12.7 -13.97 180)
 				(length 2.54)
 				(name "AOUTB+"
 					(effects
@@ -2723,7 +2723,7 @@
 				)
 			)
 			(pin power_in line
-				(at 7.62 -16.51 0)
+				(at 12.7 -16.51 180)
 				(length 2.54)
 				(name "AOUTB-"
 					(effects
@@ -2741,7 +2741,7 @@
 				)
 			)
 			(pin output line
-				(at 7.62 -19.05 0)
+				(at 12.7 -19.05 180)
 				(length 2.54)
 				(name "BMUTEC"
 					(effects
@@ -2759,7 +2759,7 @@
 				)
 			)
 			(pin output line
-				(at 7.62 -24.13 0)
+				(at 12.7 -24.13 180)
 				(length 2.54)
 				(name "VQ"
 					(effects
@@ -2777,7 +2777,7 @@
 				)
 			)
 			(pin output line
-				(at 7.62 -26.67 0)
+				(at 12.7 -26.67 180)
 				(length 2.54)
 				(name "FILT+"
 					(effects
@@ -2795,7 +2795,7 @@
 				)
 			)
 			(pin power_in line
-				(at 7.62 -29.21 0)
+				(at 12.7 -29.21 180)
 				(length 2.54)
 				(name "REF_GND"
 					(effects
@@ -2813,7 +2813,7 @@
 				)
 			)
 			(pin power_in line
-				(at 7.62 -31.75 0)
+				(at 12.7 -31.75 180)
 				(length 2.54)
 				(name "VREF"
 					(effects
@@ -3526,6 +3526,161 @@
 					)
 				)
 				(number "3"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+		)
+		(embedded_fonts no)
+	)
+	(symbol "Display_OLED_I2C"
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(property "Reference" "U"
+			(at 12.954 -6.35 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" ""
+			(at 0 0 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 0 0 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 0 0 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(symbol "Display_OLED_I2C_0_1"
+			(rectangle
+				(start -10.16 3.81)
+				(end 11.43 -3.81)
+				(stroke
+					(width 0)
+					(type default)
+				)
+				(fill
+					(type none)
+				)
+			)
+		)
+		(symbol "Display_OLED_I2C_1_1"
+			(rectangle
+				(start -16.51 5.08)
+				(end 16.51 -5.08)
+				(stroke
+					(width 0)
+					(type solid)
+				)
+				(fill
+					(type background)
+				)
+			)
+			(text "Display_OLED_I2C_0.91"
+				(at 0 6.604 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(pin bidirectional line
+				(at -19.05 3.81 0)
+				(length 2.54)
+				(name "SDA"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "1"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin bidirectional line
+				(at -19.05 1.27 0)
+				(length 2.54)
+				(name "SCL"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "2"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin power_in line
+				(at -19.05 -1.27 0)
+				(length 2.54)
+				(name "VCC"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "3"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin power_in line
+				(at -19.05 -3.81 0)
+				(length 2.54)
+				(name "GND"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "4"
 					(effects
 						(font
 							(size 1.27 1.27)
