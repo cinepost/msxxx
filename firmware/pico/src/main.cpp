@@ -17,18 +17,25 @@
 #define PIN_CS        21  //
 #define SPI_PORT      spi0
 
+#define PIN_LED       PICO_DEFAULT_LED_PIN
+
 #define PIN_BTN_1     10  // OSD Button 1
 #define PIN_BTN_2     11  // OSD Button 2
 #define PIN_BTN_3     12  // OSD Button 3
 #define PIN_BTN_4     13  // OSD Button 4
 
-#define I2C_SDA_PIN       4
-#define I2C_SCL_PIN       5
+#define I2C_SDA_PIN   4
+#define I2C_SCL_PIN   5
 #include "ssd1306/ssd1306_i2c.h"     // OLED
 
-#define ENCODER_A     2
-#define ENCODER_B     3
-#define ENCODER_BTN   6
+//#define ENCODER_A      2
+//#define ENCODER_B      3
+//#define ENCODER_BTN    6
+#if defined(ENCODER_A) && defined(ENCODER_B) && defined(ENCODER_BTN)
+#define ENCODER_ENABLED 1
+#else
+#define ENCODER_ENABLED 0
+#endif
 
 #define MAX_FILES 16
 #define MAX_FILENAME_LEN 32
@@ -135,7 +142,11 @@ static inline uint8_t reverse_uint8(uint8_t b) {
 
 bool load_selected_fpga_core(const char* filename) {
     lfs_file_t f;
-    lfs_file_open(&lfs, &f, filename, LFS_O_RDONLY);
+    int err = lfs_file_open(&lfs, &f, filename, LFS_O_RDONLY);
+    if (err) { 
+        printf("Error opening core file: %s\n", filename);
+        return false;
+    }
     
     // 1. Reset FPGA (Same as previous SPI logic)
     if(!reset_fpga_sequence()) {
@@ -164,10 +175,13 @@ bool load_selected_fpga_core(const char* filename) {
 }
 
 void init_hardware() {
-    // 1. Initialize Standard I/O (USB Serial for debugging)
+    // Initialize Standard I/O (USB Serial for debugging)
     stdio_init_all();
 
-    // 2. Initialize FPGA Control Pins
+    // Initialize PICO on-board LED
+    gpio_init(PIN_LED); gpio_set_dir(PIN_LED, GPIO_OUT);
+
+    // Initialize FPGA Control Pins
     gpio_init(PIN_NCONFIG); gpio_set_dir(PIN_NCONFIG, GPIO_OUT);
     gpio_put(PIN_NCONFIG, 1); // Default High
 
@@ -177,21 +191,24 @@ void init_hardware() {
     gpio_init(PIN_CONF_DONE); gpio_set_dir(PIN_CONF_DONE, GPIO_IN);
     gpio_pull_up(PIN_CONF_DONE);
 
-    // 3. Initialize High-Speed SPI (for FPGA Bitstream)
+    // Initialize High-Speed SPI (for FPGA Bitstream)
     // 20MHz is a safe speed for Cyclone EP1C12
     spi_init(spi0, 20 * 1000 * 1000);
     gpio_set_function(PIN_DCLK, GPIO_FUNC_SPI);
     gpio_set_function(PIN_DATA0, GPIO_FUNC_SPI);
 
-    // 4. Initialize I2C (for SSD1306 OLED)
+    // Initialize I2C (for SSD1306 OLED)
     i2c_init(I2C_PORT, I2C_CLOCK * 1000);
     gpio_set_function(I2C_SDA_PIN, GPIO_FUNC_I2C);
     gpio_set_function(I2C_SCL_PIN, GPIO_FUNC_I2C);
     gpio_pull_up(I2C_SDA_PIN);
     gpio_pull_up(I2C_SCL_PIN);
     initSSD1306();
+    invertDisplay(true);
+    updateDisplay();
 
-    // 5. Initialize Rotary Encoder Pins
+    // Initialize Rotary Encoder Pins
+#if ENCODER_ENABLED
     gpio_init(ENCODER_A);
     gpio_set_dir(ENCODER_A, GPIO_IN);
     gpio_pull_up(ENCODER_A);
@@ -203,6 +220,7 @@ void init_hardware() {
     gpio_init(ENCODER_BTN);
     gpio_set_dir(ENCODER_BTN, GPIO_IN);
     gpio_pull_up(ENCODER_BTN);
+#endif // ENCODER_ENABLED
 }
 
 static inline int read_buttons_state() {
@@ -210,7 +228,7 @@ static inline int read_buttons_state() {
 }
 
 static inline bool button_pressed() {
-    return true;
+    return false;
 }
 
 // --- CORE 1: UI PROCESS ---
@@ -228,23 +246,29 @@ void core1_entry() {
         // Update UI elements with current_val
         // lv_timer_handler(); // Example for LVGL
         sleep_ms(16); // ~60fps target
+
+        gpio_put(PIN_LED, 1);
+        sleep_ms(500);
+        gpio_put(PIN_LED, 0);
+        sleep_ms(500);
     }
 }
 
 int main() {
     // Init I2C for OLED, SPI for FPGA, and LittleFS
     init_hardware();
-    mount_littlefs();
-    populate_file_list();
-    init_buttons();
-
-    mutex_init(&shared_state.data_mutex);
 
     // Launch UI on Core 1
     multicore_reset_core1();    
     multicore_launch_core1(core1_entry);
 
+    mount_littlefs();
+    init_buttons();
+
+    mutex_init(&shared_state.data_mutex);
+
     while (true) {    
+
         // Display Menu
         clearDisplay();
         drawString(0, 0, "Select Core:");

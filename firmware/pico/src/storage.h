@@ -5,11 +5,15 @@
 #include "pico/stdlib.h"
 #include "hardware/flash.h"
 
-// --- Configuration for 16MB Flash ---
+#ifndef PICO_FLASH_SIZE_KB
+#define PICO_FLASH_SIZE_KB 2048
+#endif//PICO_FLASH_SIZE_KB
+
+// --- Flash storage configuration ---
 // We reserve the first 1MB for the Pico Program (Binary)
-// The remaining 15MB is for LittleFS
-#define FS_SIZE         (15 * 1024 * 1024) 
-#define FS_OFFSET       (1 * 1024 * 1024)  
+// The remaining is for LittleFS
+#define FS_SIZE         ((PICO_FLASH_SIZE_KB - 1024) * 1024) 
+#define FS_OFFSET       (1024 * 1024)  
 #define BLOCK_SIZE      4096
 
 // Variables for LittleFS

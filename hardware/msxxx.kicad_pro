@@ -672,6 +672,10 @@
     [
       "dc4294c2-5c44-4804-a580-c258adca3e80",
       "audio"
+    ],
+    [
+      "f57501a5-95bb-43e2-b30b-fded03da6b5b",
+      "inputs"
     ]
   ],
   "text_variables": {}

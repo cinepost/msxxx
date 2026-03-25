@@ -16,11 +16,11 @@ static int DEVICE_ADDRESS = 0x3C;
 #define I2C_PORT i2c0
 
 #ifndef I2C_SDA_PIN
-#define I2C_SDA_PIN 12
+#define I2C_SDA_PIN 4
 #endif//I2C_SDA_PIN
 
 #ifndef I2C_SCL_PIN
-#define I2C_SCL_PIN 13
+#define I2C_SCL_PIN 5
 #endif//I2C_SCL_PIN
 
  // This can be overclocked, 2000 seems to work on the device being tested
@@ -36,7 +36,7 @@ static int DEVICE_ADDRESS = 0x3C;
 #endif//SSD1306_LCDWIDTH
 
 #ifndef SSD1306_LCDHEIGHT
-#define SSD1306_LCDHEIGHT           64
+#define SSD1306_LCDHEIGHT           32
 #endif//SSD1306_LCDHEIGHT
 
 #define SSD1306_FRAMEBUFFER_SIZE    (SSD1306_LCDWIDTH * SSD1306_LCDHEIGHT / 8)
