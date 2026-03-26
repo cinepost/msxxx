@@ -25,11 +25,10 @@ include_directories(
 
 add_executable(pico_fpga_loader
     src/main.cpp
-    # LittleFS source files
+    src/i2c_expander.cpp
+    src/ssd1306/ssd1306_i2c.c
     src/littlefs/lfs.c
     src/littlefs/lfs_util.c
-	# SSD1306 source files
-    src/ssd1306/ssd1306_i2c.c
 )
 
 # Pull in required Pico libraries

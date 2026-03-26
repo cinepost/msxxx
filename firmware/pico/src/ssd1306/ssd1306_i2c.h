@@ -5,13 +5,6 @@
 #include "pico/stdlib.h"
 #include "hardware/i2c.h"
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
-// By default these devices are on bus address 0x3C or 0x3D. Check your documentation.
-static int DEVICE_ADDRESS = 0x3C;
 
 #define I2C_PORT i2c0
 
@@ -74,6 +67,14 @@ static int DEVICE_ADDRESS = 0x3C;
 #define SSD1306_SETPRECHARGE        0xD9
 #define SSD1306_SETCOMPINS          0xDA
 #define SSD1306_SETVCOMDETECT       0xDB
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+// By default these devices are on bus address 0x3C or 0x3D. Check your documentation.
+static int DEVICE_ADDRESS = 0x3C;
 
 void initSSD1306();
 

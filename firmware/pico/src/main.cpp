@@ -6,7 +6,7 @@
 #include "hardware/spi.h"
 
 #include "storage.h"
-
+#include "i2c_expander.h"
 
 // Pin Definitions
 #define PIN_NCONFIG   16  // Output to FPGA
@@ -198,7 +198,7 @@ void init_hardware() {
     gpio_set_function(PIN_DATA0, GPIO_FUNC_SPI);
 
     // Initialize I2C (for SSD1306 OLED)
-    i2c_init(I2C_PORT, I2C_CLOCK * 1000);
+    i2c_init(i2c0, I2C_CLOCK * 1000);
     gpio_set_function(I2C_SDA_PIN, GPIO_FUNC_I2C);
     gpio_set_function(I2C_SCL_PIN, GPIO_FUNC_I2C);
     gpio_pull_up(I2C_SDA_PIN);
@@ -206,6 +206,10 @@ void init_hardware() {
     initSSD1306();
     invertDisplay(true);
     updateDisplay();
+
+    // Initalize I2C  at 100kHz (expander, rtc)
+    i2c_init(i2c1, 100 * 1000);
+    i2cExpanderInit(i2c1, 0x20);
 
     // Initialize Rotary Encoder Pins
 #if ENCODER_ENABLED
@@ -236,6 +240,10 @@ void core1_entry() {
     // Initialize UI/Display here (e.g., LVGL init)
     
     while (1) {
+        // Read buttons state
+        uint8_t data;
+        i2cExpanderRead(data);
+
         uint32_t current_val;
         
         // Safely read shared data from Core 0
@@ -251,6 +259,10 @@ void core1_entry() {
         sleep_ms(500);
         gpio_put(PIN_LED, 0);
         sleep_ms(500);
+
+        // Set expander leds
+        uint8_t outputs = 0x00;
+        i2cExpanderWrite(outputs); 
     }
 }
 
