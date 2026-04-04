@@ -2,10 +2,7 @@
 
 #include "i2c_expander.h"
 
-struct {
-    i2c_inst_t* port;
-    uint8_t addr;
-} g_exp_i2c_conf;
+I2CExpanderConfig g_exp_i2c_conf;
 
 void i2cExpanderInit(i2c_inst_t* port, uint8_t addr) {
     g_exp_i2c_conf.port = port;

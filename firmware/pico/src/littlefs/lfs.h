@@ -10,12 +10,6 @@
 
 #include "lfs_util.h"
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
-
 /// Version info ///
 
 // Software library version
@@ -469,6 +463,9 @@ typedef struct lfs {
 #endif
 } lfs_t;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /// Filesystem functions ///
 

@@ -5,6 +5,7 @@
 #include "hardware/sync.h"
 #include "hardware/spi.h"
 
+#include "mcu_config.h"
 #include "storage.h"
 #include "i2c_expander.h"
 

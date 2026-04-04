@@ -662,20 +662,28 @@
       "Root"
     ],
     [
-      "f0f22c17-af6b-448a-8d5c-e2cc51e5a901",
-      "video"
+      "aecefd61-0047-4c02-acd4-c1c5dda94641",
+      "main"
     ],
     [
       "32c77b0b-7d4e-4f70-a9cf-3a05d938f17e",
-      "slots"
+      "platfrom_io"
     ],
     [
-      "dc4294c2-5c44-4804-a580-c258adca3e80",
-      "audio"
+      "f0f22c17-af6b-448a-8d5c-e2cc51e5a901",
+      "av"
     ],
     [
       "f57501a5-95bb-43e2-b30b-fded03da6b5b",
-      "inputs"
+      "controllers_board"
+    ],
+    [
+      "dc4294c2-5c44-4804-a580-c258adca3e80",
+      "misc"
+    ],
+    [
+      "937d2835-4151-4b8c-bc7d-b000dd4338c9",
+      "controller_board_n64"
     ]
   ],
   "text_variables": {}

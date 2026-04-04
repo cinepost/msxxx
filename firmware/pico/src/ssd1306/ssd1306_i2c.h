@@ -68,13 +68,12 @@
 #define SSD1306_SETCOMPINS          0xDA
 #define SSD1306_SETVCOMDETECT       0xDB
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
 // By default these devices are on bus address 0x3C or 0x3D. Check your documentation.
 static int DEVICE_ADDRESS = 0x3C;
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 void initSSD1306();
 

@@ -51,15 +51,14 @@
 #include <assert.h>
 #endif
 #if !defined(LFS_NO_DEBUG) || \
-        !defined(LFS_NO_WARN) || \
-        !defined(LFS_NO_ERROR) || \
-        defined(LFS_YES_TRACE)
+    !defined(LFS_NO_WARN) || \
+    !defined(LFS_NO_ERROR) || \
+    defined(LFS_YES_TRACE)
 #include <stdio.h>
 #endif
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 

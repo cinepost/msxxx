@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "Chimera")(type "KiCad")(uri "/home/max/mnt/misc_hdd/dev/msxxx/hardware/libraries/Chimera.kicad_sym")(options "")(descr ""))
+)

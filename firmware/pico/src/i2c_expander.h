@@ -22,9 +22,14 @@
 #define EXP_I2C_GPPU    0x06 // Pull-up Resistors (1=Enabled)
 #define EXP_I2C_GPIO    0x09 // Port Register
 
+struct I2CExpanderConfig{
+    i2c_inst_t* port;
+    uint8_t addr;
+};
+
+
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 void i2cExpanderInit(i2c_inst_t* port = EXP_I2C_PORT, uint8_t addr = EXP_I2C_ADDR);
